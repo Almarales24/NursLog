@@ -1,0 +1,47 @@
+*.iml
+.gradle/
+/local.properties
+local.properties
+build/
+/build
+/captures
+captures/
+.externalNativeBuild/
+.cxx/
+out/
+
+# Android Studio
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+*.hprof
+.navigation/
+local.history/
+
+# Keystore de firma (NUNCA subir a repositorio público)
+*.jks
+*.keystore
+keystore.properties
+
+# Archivos de entorno / secretos
+.env
+*.env
+secrets.properties
+
+# Logs
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Google Services (si se agrega Firebase en el futuro)
+google-services.json
+
+# Archivos generados
+*.ap_
+*.apk
+*.aab
