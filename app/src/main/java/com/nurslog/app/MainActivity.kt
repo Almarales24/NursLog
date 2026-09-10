@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nurslog.app.data.local.NursLogDatabase
 import com.nurslog.app.data.repository.HistorialRepository
+import com.nurslog.app.data.repository.MedicacionRepository
 import com.nurslog.app.data.repository.PacienteRepository
 import com.nurslog.app.ui.navigation.NavGraph
 import com.nurslog.app.ui.paciente.PacienteViewModel
@@ -34,6 +35,13 @@ class MainActivity : ComponentActivity() {
                             notaEnfermeriaDao = database.notaEnfermeriaDao()
                         )
                     }
+                    val medicacionRepository = remember {
+                        MedicacionRepository(
+                            medicamentoDao = database.medicamentoDao(),
+                            horarioDao = database.horarioDao(),
+                            registroAdministracionDao = database.registroAdministracionDao()
+                        )
+                    }
 
                     val pacienteViewModel: PacienteViewModel = viewModel(
                         factory = PacienteViewModelFactory(pacienteRepository)
@@ -41,7 +49,8 @@ class MainActivity : ComponentActivity() {
 
                     NavGraph(
                         pacienteViewModel = pacienteViewModel,
-                        historialRepository = historialRepository
+                        historialRepository = historialRepository,
+                        medicacionRepository = medicacionRepository
                     )
                 }
             }

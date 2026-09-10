@@ -9,9 +9,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.nurslog.app.data.repository.HistorialRepository
+import com.nurslog.app.data.repository.MedicacionRepository
 import com.nurslog.app.ui.historial.HistorialScreen
 import com.nurslog.app.ui.historial.HistorialViewModel
 import com.nurslog.app.ui.historial.HistorialViewModelFactory
+import com.nurslog.app.ui.medicacion.MedicacionScreen
+import com.nurslog.app.ui.medicacion.MedicacionViewModel
+import com.nurslog.app.ui.medicacion.MedicacionViewModelFactory
 import com.nurslog.app.ui.paciente.PacienteViewModel
 import com.nurslog.app.ui.paciente.SeleccionPacienteScreen
 
@@ -29,6 +33,7 @@ object NursLogRoutes {
 fun NavGraph(
     pacienteViewModel: PacienteViewModel,
     historialRepository: HistorialRepository,
+    medicacionRepository: MedicacionRepository,
     navController: NavHostController = rememberNavController()
 ) {
     NavHost(
@@ -52,10 +57,21 @@ fun NavGraph(
             val historialViewModel: HistorialViewModel = viewModel(
                 factory = HistorialViewModelFactory(historialRepository, pacienteId)
             )
-            HistorialScreen(viewModel = historialViewModel)
+            HistorialScreen(
+                viewModel = historialViewModel,
+                onIrAMedicacion = { navController.navigate(NursLogRoutes.medicacion(pacienteId)) }
+            )
         }
 
-        // Se agrega cuando construyamos MedicacionScreen
-        // composable(NursLogRoutes.MEDICACION) { backStackEntry -> ... }
+        composable(
+            route = NursLogRoutes.MEDICACION,
+            arguments = listOf(navArgument("pacienteId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val pacienteId = backStackEntry.arguments?.getInt("pacienteId") ?: 0
+            val medicacionViewModel: MedicacionViewModel = viewModel(
+                factory = MedicacionViewModelFactory(medicacionRepository, pacienteId)
+            )
+            MedicacionScreen(viewModel = medicacionViewModel)
+        }
     }
 }
