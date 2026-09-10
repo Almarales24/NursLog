@@ -5,13 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.nurslog.app.data.local.NursLogDatabase
+import com.nurslog.app.data.repository.PacienteRepository
+import com.nurslog.app.ui.navigation.NavGraph
+import com.nurslog.app.ui.paciente.PacienteViewModel
+import com.nurslog.app.ui.paciente.PacienteViewModelFactory
 import com.nurslog.app.ui.theme.NursLogTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,19 +23,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             NursLogTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    Scaffold { innerPadding ->
-                        NursLogPlaceholder(modifier = Modifier.padding(innerPadding))
-                    }
+                    val database = remember { NursLogDatabase.getDatabase(applicationContext) }
+                    val pacienteRepository = remember { PacienteRepository(database.pacienteDao()) }
+                    val pacienteViewModel: PacienteViewModel = viewModel(
+                        factory = PacienteViewModelFactory(pacienteRepository)
+                    )
+
+                    NavGraph(pacienteViewModel = pacienteViewModel)
                 }
             }
         }
     }
-}
-
-@Composable
-fun NursLogPlaceholder(modifier: Modifier = Modifier) {
-    Text(
-        text = "NursLog",
-        modifier = modifier.padding(16.dp)
-    )
 }
