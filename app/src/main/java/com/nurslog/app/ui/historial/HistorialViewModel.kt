@@ -6,9 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.nurslog.app.data.entity.Alergia
 import com.nurslog.app.data.entity.Diagnostico
 import com.nurslog.app.data.entity.NotaEnfermeria
+import com.nurslog.app.data.remote.icd10.Icd10Resultado
 import com.nurslog.app.data.repository.HistorialRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -25,6 +28,20 @@ class HistorialViewModel(
 
     val notas: StateFlow<List<NotaEnfermeria>> = repository.getNotas(pacienteId)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // HU-08: resultados de busqueda ICD-10 - Karol
+    private val _icd10Resultados = MutableStateFlow<List<Icd10Resultado>>(emptyList())
+    val icd10Resultados: StateFlow<List<Icd10Resultado>> = _icd10Resultados.asStateFlow()
+
+    fun buscarIcd10(termino: String) {
+        viewModelScope.launch {
+            _icd10Resultados.value = repository.buscarIcd10(termino)
+        }
+    }
+
+    fun limpiarIcd10Resultados() {
+        _icd10Resultados.value = emptyList()
+    }
 
     fun agregarDiagnostico(descripcion: String, estado: String) {
         viewModelScope.launch {

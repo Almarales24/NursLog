@@ -37,7 +37,7 @@ fun HistorialScreen(
             text = "Historial clínico",
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier
+            modifier = Modifier.padding(16.dp)
         )
 
         TabRow(selectedTabIndex = tabSeleccionada) {
@@ -51,8 +51,8 @@ fun HistorialScreen(
         }
 
         when (tabSeleccionada) {
-            0 -> DiagnosticoTab(diagnosticos = diagnosticos)
-            1 -> AlergiaTab(alergias = alergias)
+            0 -> DiagnosticoTab(diagnosticos = diagnosticos, viewModel = viewModel)
+            1 -> AlergiaTab(alergias = alergias, onAgregarAlergia = viewModel::agregarAlergia)
             2 -> NotaTab(notas = notas, onAgregarNota = viewModel::agregarNota)
         }
 
