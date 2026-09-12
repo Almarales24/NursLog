@@ -58,6 +58,7 @@ abstract class NursLogDatabase : RoomDatabase() {
                     "nurslog_database"
                 )
                     .addCallback(seedCallback)
+                    .fallbackToDestructiveMigration(dropAllTables = true)
                     .build()
                 INSTANCE = instance
                 instance

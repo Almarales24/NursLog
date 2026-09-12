@@ -6,6 +6,7 @@ import com.nurslog.app.dao.RegistroAdministracionDao
 import com.nurslog.app.data.entity.Horario
 import com.nurslog.app.data.entity.Medicamento
 import com.nurslog.app.data.entity.RegistroAdministracion
+import com.nurslog.app.data.remote.RetrofitInstance
 import kotlinx.coroutines.flow.Flow
 
 class MedicacionRepository(
@@ -29,6 +30,49 @@ class MedicacionRepository(
 
     suspend fun insertHorario(horario: Horario): Long =
         horarioDao.insert(horario)
+
+    // Crea el medicamento y su horario en un solo paso desde el formulario
+    suspend fun crearMedicamentoConHorario(
+        nombre: String,
+        dosis: String,
+        via: String,
+        recomendacion: String?,
+        hora: String,
+        pacienteId: Int
+    ) {
+        val medicamentoId = medicamentoDao.insert(
+            Medicamento(nombre = nombre, dosis = dosis, via = via, recomendacion = recomendacion)
+        ).toInt()
+        horarioDao.insert(
+            Horario(medicamentoId = medicamentoId, pacienteId = pacienteId, hora = hora)
+        )
+    }
+
+    // Recomendación/advertencia de uso según hora y frecuencia consumida, vía OpenFDA
+    suspend fun buscarRecomendacionOpenFda(nombreMedicamento: String): String? {
+        if (nombreMedicamento.isBlank()) return null
+
+        val camposBusqueda = listOf(
+            "openfda.brand_name:\"$nombreMedicamento\"",
+            "openfda.generic_name:\"$nombreMedicamento\"",
+            "openfda.substance_name:\"$nombreMedicamento\""
+        )
+
+        for (busqueda in camposBusqueda) {
+            try {
+                val respuesta = RetrofitInstance.openFdaApi.buscarEtiqueta(busqueda = busqueda)
+                val resultado = respuesta.results?.firstOrNull()
+                if (resultado != null) {
+                    val dosificacion = resultado.dosage_and_administration?.firstOrNull()
+                    val texto = dosificacion?.take(200)
+                    if (!texto.isNullOrBlank()) return texto
+                }
+            } catch (e: Exception) {
+                // intenta el siguiente campo de búsqueda
+            }
+        }
+        return null
+    }
 
     // HU-10: registro simple tras validar checklist de 5 correctos
     suspend fun registrarAdministracion(

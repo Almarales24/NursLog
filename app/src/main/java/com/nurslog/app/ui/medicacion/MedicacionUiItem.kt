@@ -6,5 +6,6 @@ data class MedicacionUiItem(
     val dosis: String,
     val via: String,
     val hora: String,
-    val estado: String // "Pendiente" o "Administrado"
+    val estado: String, // "Pendiente" o "Administrado"
+    val recomendacion: String? = null
 )

@@ -28,27 +28,36 @@ fun MedicamentoItem(
             .clickable(enabled = pendiente) { onClick(item) },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
-        ) {
-            Column(modifier = Modifier.padding(end = 8.dp)) {
+        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.padding(end = 8.dp)) {
+                    Text(
+                        text = item.medicamentoNombre,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = "${item.dosis} · ${item.via}",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                }
                 Text(
-                    text = item.medicamentoNombre,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "${item.dosis} · ${item.via}",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.secondary
+                    text = item.hora,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (pendiente) MaterialTheme.colorScheme.error
+                    else MaterialTheme.colorScheme.tertiary
                 )
             }
-            Text(
-                text = item.hora,
-                style = MaterialTheme.typography.bodyMedium,
-                color = if (pendiente) MaterialTheme.colorScheme.error
-                else MaterialTheme.colorScheme.tertiary
-            )
+
+            item.recomendacion?.let { recomendacion ->
+                Text(
+                    text = recomendacion,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
         }
     }
 }

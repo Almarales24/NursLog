@@ -9,5 +9,6 @@ data class Medicamento(
     val id: Int = 0,
     val nombre: String,
     val dosis: String,
-    val via: String // "VO", "IV", "IM", "SC"
+    val via: String, // "VO", "IV", "IM", "SC"
+    val recomendacion: String? = null // advertencia/uso recomendado (OpenFDA o manual)
 )
