@@ -65,13 +65,23 @@ class MedicacionRepository(
                 if (resultado != null) {
                     val dosificacion = resultado.dosage_and_administration?.firstOrNull()
                     val texto = dosificacion?.take(200)
-                    if (!texto.isNullOrBlank()) return texto
+                    if (!texto.isNullOrBlank()) return traducirAlEspanol(texto)
                 }
             } catch (e: Exception) {
                 // intenta el siguiente campo de búsqueda
             }
         }
         return null
+    }
+
+    // Traduce texto en inglés (OpenFDA) al español vía MyMemory Translation API
+    private suspend fun traducirAlEspanol(texto: String): String {
+        return try {
+            val respuesta = RetrofitInstance.translateApi.traducir(texto = texto)
+            respuesta.responseData?.translatedText ?: texto
+        } catch (e: Exception) {
+            texto // si falla la traducción, se muestra el texto original en inglés
+        }
     }
 
     // HU-10: registro simple tras validar checklist de 5 correctos

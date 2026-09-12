@@ -43,7 +43,19 @@ class HistorialRepository(
         val listaPares = respuesta.getOrNull(3) as? List<List<String>> ?: return emptyList()
 
         return listaPares.map { par ->
-            Icd10Resultado(codigo = par[0], nombre = par.getOrElse(1) { "" })
+            val nombreTraducido = traducirAlEspanol(par.getOrElse(1) { "" })
+            Icd10Resultado(codigo = par[0], nombre = nombreTraducido)
+        }
+    }
+
+    // Traduce texto en inglés al español vía MyMemory Translation API
+    private suspend fun traducirAlEspanol(texto: String): String {
+        if (texto.isBlank()) return texto
+        return try {
+            val respuesta = RetrofitInstance.translateApi.traducir(texto = texto)
+            respuesta.responseData?.translatedText ?: texto
+        } catch (e: Exception) {
+            texto
         }
     }
 }
