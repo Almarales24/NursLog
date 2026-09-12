@@ -70,6 +70,20 @@ class MedicacionViewModel(
         _recomendacionBuscada.value = null
     }
 
+    // Normalización de nombre de medicamento vía RxNorm
+    private val _rxNormResultados = MutableStateFlow<List<String>>(emptyList())
+    val rxNormResultados: StateFlow<List<String>> = _rxNormResultados.asStateFlow()
+
+    fun buscarRxNorm(nombre: String) {
+        viewModelScope.launch {
+            _rxNormResultados.value = repository.buscarRxNorm(nombre)
+        }
+    }
+
+    fun limpiarRxNormResultados() {
+        _rxNormResultados.value = emptyList()
+    }
+
     fun crearMedicamento(nombre: String, dosis: String, via: String, recomendacion: String?, hora: String) {
         viewModelScope.launch {
             repository.crearMedicamentoConHorario(

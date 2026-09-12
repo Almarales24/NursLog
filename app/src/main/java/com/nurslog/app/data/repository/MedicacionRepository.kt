@@ -48,6 +48,22 @@ class MedicacionRepository(
         )
     }
 
+    // HU: normalización de nombres de medicamentos vía RxNorm
+    suspend fun buscarRxNorm(nombre: String): List<String> {
+        if (nombre.isBlank()) return emptyList()
+        return try {
+            val respuesta = RetrofitInstance.rxNormApi.buscarMedicamentos(nombre)
+            respuesta.drugGroup?.conceptGroup
+                ?.flatMap { it.conceptProperties ?: emptyList() }
+                ?.map { it.name }
+                ?.distinct()
+                ?.take(8)
+                ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
     // Recomendación/advertencia de uso según hora y frecuencia consumida, vía OpenFDA
     suspend fun buscarRecomendacionOpenFda(nombreMedicamento: String): String? {
         if (nombreMedicamento.isBlank()) return null
