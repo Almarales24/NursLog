@@ -60,10 +60,11 @@ class HistorialViewModel(
     }
 
     // HU-01: nota con trazabilidad (autor + fechaHora automática) - Paula Mendoza
-    fun agregarNota(texto: String, autor: String) {
+    // HU-04: distingue nota general de recomendación del personal - Karen Nava
+    fun agregarNota(texto: String, autor: String, tipo: String = "Nota") {
         viewModelScope.launch {
             repository.insertNota(
-                NotaEnfermeria(pacienteId = pacienteId, texto = texto, autor = autor)
+                NotaEnfermeria(pacienteId = pacienteId, texto = texto, autor = autor, tipo = tipo)
             )
         }
     }

@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 
 // HU-01: notas de enfermería con trazabilidad completa - Paula Mendoza
+// HU-04: recomendaciones del personal de salud dirigidas al paciente - Karen Nava
 @Entity(
     tableName = "nota_enfermeria",
     foreignKeys = [
@@ -24,5 +25,6 @@ data class NotaEnfermeria(
     val pacienteId: Int,
     val texto: String,
     val autor: String,
+    val tipo: String = "Nota", // "Nota" o "Recomendacion"
     val fechaHora: Long = System.currentTimeMillis() // trazabilidad automática
 )
