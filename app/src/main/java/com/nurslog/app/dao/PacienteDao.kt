@@ -26,6 +26,9 @@ interface PacienteDao {
     @Query("SELECT * FROM paciente WHERE id = :pacienteId")
     fun getPacienteById(pacienteId: Int): Flow<Paciente?>
 
+    @Query("SELECT * FROM paciente WHERE id = :pacienteId")
+    suspend fun getPacienteByIdOnce(pacienteId: Int): Paciente?
+
     @Query("SELECT * FROM paciente WHERE nombre LIKE '%' || :query || '%'")
     fun searchPacientes(query: String): Flow<List<Paciente>>
 }

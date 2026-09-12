@@ -25,4 +25,7 @@ interface RegistroAdministracionDao {
 
     @Query("SELECT * FROM registro_administracion WHERE horarioId IN (:horarioIds)")
     fun getRegistrosByHorarios(horarioIds: List<Int>): Flow<List<RegistroAdministracion>>
+
+    @Query("SELECT * FROM registro_administracion WHERE horarioId = :horarioId ORDER BY horaReal DESC LIMIT 1")
+    suspend fun getUltimoRegistroOnce(horarioId: Int): RegistroAdministracion?
 }

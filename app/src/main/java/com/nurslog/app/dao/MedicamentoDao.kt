@@ -25,4 +25,7 @@ interface MedicamentoDao {
 
     @Query("SELECT * FROM medicamento WHERE id = :id")
     fun getMedicamentoById(id: Int): Flow<Medicamento?>
+
+    @Query("SELECT * FROM medicamento WHERE id = :id")
+    suspend fun getMedicamentoByIdOnce(id: Int): Medicamento?
 }

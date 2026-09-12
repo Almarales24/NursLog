@@ -22,4 +22,7 @@ interface HorarioDao {
 
     @Query("SELECT * FROM horario WHERE pacienteId = :pacienteId ORDER BY hora ASC")
     fun getHorariosByPaciente(pacienteId: Int): Flow<List<Horario>>
+
+    @Query("SELECT * FROM horario")
+    suspend fun getAllHorariosOnce(): List<Horario>
 }

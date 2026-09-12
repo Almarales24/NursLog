@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.nurslog.app.data.entity.Paciente
 import com.nurslog.app.ui.components.PacienteCard
@@ -37,6 +38,7 @@ fun SeleccionPacienteScreen(
     val pacientes by viewModel.pacientes.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     var mostrarDialogo by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -73,6 +75,17 @@ fun SeleccionPacienteScreen(
                 .padding(24.dp)
         ) {
             Icon(Icons.Filled.Add, contentDescription = "Agregar paciente")
+        }
+
+        // Botón temporal de prueba: fuerza la revisión de recordatorios sin esperar los 15 min
+        androidx.compose.material3.TextButton(
+            onClick = {
+                val solicitud = androidx.work.OneTimeWorkRequestBuilder<com.nurslog.app.notifications.MedicacionReminderWorker>().build()
+                androidx.work.WorkManager.getInstance(context).enqueue(solicitud)
+            },
+            modifier = Modifier.align(Alignment.BottomStart).padding(16.dp)
+        ) {
+            Text("Probar recordatorios ahora")
         }
     }
 
