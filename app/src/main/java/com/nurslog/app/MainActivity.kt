@@ -29,29 +29,38 @@ import com.nurslog.app.ui.paciente.PacienteViewModelFactory
 import com.nurslog.app.ui.theme.NursLogTheme
 import java.util.concurrent.TimeUnit
 
+// Actividad principal que configura la UI y la navegación de la aplicación
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Habilita el diseño desde borde a borde (sistema de navegación transparente)
         enableEdgeToEdge()
 
+        // Crea el canal de notificaciones para los recordatorios de medicación
         NotificationHelper.crearCanal(applicationContext)
+        // Programa la tarea periódica de recordatorio de medicamentos
         programarRecordatorioMedicacion()
 
+        // Establece el contenido Compose
         setContent {
             NursLogTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
+                    // Solicita permiso para enviar notificaciones (Android 13+)
                     val solicitarPermiso = rememberLauncherForActivityResult(
                         contract = ActivityResultContracts.RequestPermission()
                     ) { /* resultado ignorado: si se niega, simplemente no habrá notificaciones */ }
 
+                    // Lanza el permiso en la composición inicial
                     LaunchedEffect(Unit) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             solicitarPermiso.launch(Manifest.permission.POST_NOTIFICATIONS)
                         }
                     }
 
+                    // Inicializa la base de datos (singleton)
                     val database = remember { NursLogDatabase.getDatabase(applicationContext) }
 
+                    // Crea los repositorios necesarios
                     val pacienteRepository = remember { PacienteRepository(database.pacienteDao()) }
                     val historialRepository = remember {
                         HistorialRepository(
@@ -68,10 +77,12 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
+                    // Crea el ViewModel de pacientes con su factory
                     val pacienteViewModel: PacienteViewModel = viewModel(
                         factory = PacienteViewModelFactory(pacienteRepository)
                     )
 
+                    // Configura la navegación entre pantallas
                     NavGraph(
                         pacienteViewModel = pacienteViewModel,
                         historialRepository = historialRepository,
@@ -82,11 +93,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // Recordatorio de medicación: revisa cada 15 minutos (mínimo permitido por WorkManager)
+    // Programa un trabajo periódico que revisa cada 15 minutos si hay medicaciones pendientes
     private fun programarRecordatorioMedicacion() {
+        // Crea una solicitud de trabajo periódico cada 15 minutos (mínimo permitido)
         val solicitud = PeriodicWorkRequestBuilder<MedicacionReminderWorker>(15, TimeUnit.MINUTES)
             .build()
 
+        // Enqueue el trabajo con política KEEP (mantiene el trabajo existente)
         WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
             "recordatorio_medicacion",
             ExistingPeriodicWorkPolicy.KEEP,

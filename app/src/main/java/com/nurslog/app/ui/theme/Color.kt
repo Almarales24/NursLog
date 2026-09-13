@@ -2,7 +2,7 @@ package com.nurslog.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Modo claro
+// Paleta de colores para modo claro
 val FondoClaro = Color(0xFFEAE7E1)
 val SuperficieClaro = Color(0xFFF7F5F1)
 val PrimarioClaro = Color(0xFF3A3A38)
@@ -13,7 +13,7 @@ val ExitoClaro = Color(0xFF5C6B52)
 val TextoPrincipalClaro = Color(0xFF1C1C1A)
 val TextoSecundarioClaro = Color(0xFF6B6862)
 
-// Modo oscuro
+// Paleta de colores para modo oscuro
 val FondoOscuro = Color(0xFF141412)
 val SuperficieOscuro = Color(0xFF201F1D)
 val PrimarioOscuro = Color(0xFFC9C5BC)

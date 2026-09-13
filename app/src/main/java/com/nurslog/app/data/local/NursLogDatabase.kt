@@ -23,7 +23,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+// Clase base que define la estructura de la base de datos SQLite usando Room
 @Database(
+    // Todas las entidades que serán tablas en la BD
     entities = [
         Paciente::class,
         Diagnostico::class,
@@ -33,31 +35,46 @@ import kotlinx.coroutines.launch
         Horario::class,
         RegistroAdministracion::class
     ],
+    // Versión de esquema de la base de datos
     version = 1,
+    // No exporta el esquema a archivos JSON
     exportSchema = false
 )
 abstract class NursLogDatabase : RoomDatabase() {
 
+    // Proporciona acceso al DAO de pacientes
     abstract fun pacienteDao(): PacienteDao
+    // Proporciona acceso al DAO de diagnósticos
     abstract fun diagnosticoDao(): DiagnosticoDao
+    // Proporciona acceso al DAO de alergias
     abstract fun alergiaDao(): AlergiaDao
+    // Proporciona acceso al DAO de notas de enfermería
     abstract fun notaEnfermeriaDao(): NotaEnfermeriaDao
+    // Proporciona acceso al DAO de medicamentos
     abstract fun medicamentoDao(): MedicamentoDao
+    // Proporciona acceso al DAO de horarios
     abstract fun horarioDao(): HorarioDao
+    // Proporciona acceso al DAO de registros de administración
     abstract fun registroAdministracionDao(): RegistroAdministracionDao
 
+    // Companion object para manejar la instancia única de la BD (Singleton)
     companion object {
+        // Variable volátil para acceso thread-safe
         @Volatile
         private var INSTANCE: NursLogDatabase? = null
 
+        // Obtiene o crea la instancia única de la base de datos
         fun getDatabase(context: Context): NursLogDatabase {
             return INSTANCE ?: synchronized(this) {
+                // Construye la instancia si no existe
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     NursLogDatabase::class.java,
                     "nurslog_database"
                 )
+                    // Ejecuta datos de demostración al crear la BD por primera vez
                     .addCallback(seedCallback)
+                    // Recrea la BD si hay cambios de esquema (desarrollo)
                     .fallbackToDestructiveMigration(dropAllTables = true)
                     .build()
                 INSTANCE = instance
@@ -65,11 +82,11 @@ abstract class NursLogDatabase : RoomDatabase() {
             }
         }
 
-        // Datos de ejemplo: se insertan solo la primera vez que se crea la BD.
-        // Son datos de demostracion, se pueden borrar manualmente desde la app.
+        // Callback para insertar datos de ejemplo en la creación de la BD
         private val seedCallback = object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
+                // Accede a la instancia y ejecuta el seed en background
                 INSTANCE?.let { database ->
                     CoroutineScope(Dispatchers.IO).launch {
                         seedDatabase(database)
@@ -78,6 +95,7 @@ abstract class NursLogDatabase : RoomDatabase() {
             }
         }
 
+        // Inserta datos de demostración: dos pacientes con medicamentos, diagnósticos y alergias
         private suspend fun seedDatabase(database: NursLogDatabase) {
             val pacienteDao = database.pacienteDao()
             val diagnosticoDao = database.diagnosticoDao()
@@ -86,34 +104,42 @@ abstract class NursLogDatabase : RoomDatabase() {
             val medicamentoDao = database.medicamentoDao()
             val horarioDao = database.horarioDao()
 
+            // Inserta el primer paciente de demostración
             val paciente1Id = pacienteDao.insert(
                 Paciente(nombre = "Carlos Ramírez", cama = "12A", sala = "3", edad = 58)
             ).toInt()
 
+            // Inserta el segundo paciente de demostración
             val paciente2Id = pacienteDao.insert(
                 Paciente(nombre = "María Peña", cama = "07B", sala = "2", edad = 34)
             ).toInt()
 
+            // Agrega diagnósticos al primer paciente
             diagnosticoDao.insert(
                 Diagnostico(pacienteId = paciente1Id, descripcion = "Neumonía adquirida en comunidad", estado = "Activo")
             )
             diagnosticoDao.insert(
                 Diagnostico(pacienteId = paciente1Id, descripcion = "Hipertensión controlada", estado = "Estable")
             )
+            // Agrega una alergia severa al primer paciente
             alergiaDao.insert(
                 Alergia(pacienteId = paciente1Id, sustancia = "Penicilina", severidad = "Severa")
             )
+            // Agrega una nota de enfermería al primer paciente
             notaDao.insert(
                 NotaEnfermeria(pacienteId = paciente1Id, texto = "Paciente afebril, tolera vía oral, se mantiene en observación.", autor = "Enf. Ríos")
             )
 
+            // Agrega un diagnóstico al segundo paciente
             diagnosticoDao.insert(
                 Diagnostico(pacienteId = paciente2Id, descripcion = "Post-operatorio apendicectomía", estado = "Estable")
             )
+            // Agrega una alergia leve al segundo paciente
             alergiaDao.insert(
                 Alergia(pacienteId = paciente2Id, sustancia = "Aspirina", severidad = "Leve")
             )
 
+            // Inserta medicamentos de demostración
             val medicamento1Id = medicamentoDao.insert(
                 Medicamento(nombre = "Paracetamol", dosis = "500mg", via = "VO")
             ).toInt()
@@ -121,6 +147,7 @@ abstract class NursLogDatabase : RoomDatabase() {
                 Medicamento(nombre = "Omeprazol", dosis = "20mg", via = "VO")
             ).toInt()
 
+            // Asocia medicamentos con pacientes en horarios específicos
             horarioDao.insert(Horario(medicamentoId = medicamento1Id, pacienteId = paciente1Id, hora = "08:00"))
             horarioDao.insert(Horario(medicamentoId = medicamento2Id, pacienteId = paciente1Id, hora = "08:00"))
             horarioDao.insert(Horario(medicamentoId = medicamento1Id, pacienteId = paciente2Id, hora = "12:00"))

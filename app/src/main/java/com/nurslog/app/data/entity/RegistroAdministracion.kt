@@ -5,9 +5,10 @@ import androidx.room.PrimaryKey
 import androidx.room.ForeignKey
 import androidx.room.Index
 
-// HU-05: nota de enfermería asociada a cada registro de medicación - Karol Leon
+// Define la tabla "registro_administracion" para registrar cada administración de medicamento
 @Entity(
     tableName = "registro_administracion",
+    // Si se elimina el horario, se eliminan automáticamente sus registros
     foreignKeys = [
         ForeignKey(
             entity = Horario::class,
@@ -16,14 +17,21 @@ import androidx.room.Index
             onDelete = ForeignKey.CASCADE
         )
     ],
+    // Índice para optimizar búsquedas por horarioId
     indices = [Index("horarioId")]
 )
 data class RegistroAdministracion(
+    // Identificador único generado automáticamente
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    // Referencia al horario del medicamento
     val horarioId: Int,
-    val estado: String, // "Pendiente", "Administrado", "Omitido"
-    val horaReal: Long? = null, // se completa al confirmar administración
+    // Estado: "Pendiente", "Administrado" u "Omitido"
+    val estado: String,
+    // Hora real de administración en milisegundos (se completa al confirmar)
+    val horaReal: Long? = null,
+    // Nombre del enfermero que administró el medicamento
     val enfermero: String,
-    val nota: String? = null // observaciones al momento de administrar - HU-05
+    // Observaciones o notas al momento de administrar
+    val nota: String? = null
 )

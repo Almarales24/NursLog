@@ -5,9 +5,10 @@ import androidx.room.PrimaryKey
 import androidx.room.ForeignKey
 import androidx.room.Index
 
-// HU-06: historial clínico vinculado para evitar administración innecesaria - Michelle Díaz
+// Define la tabla "diagnostico" con relación a Paciente para mantener historial clínico
 @Entity(
     tableName = "diagnostico",
+    // Si se elimina el paciente, se eliminan automáticamente sus diagnósticos
     foreignKeys = [
         ForeignKey(
             entity = Paciente::class,
@@ -16,12 +17,17 @@ import androidx.room.Index
             onDelete = ForeignKey.CASCADE
         )
     ],
+    // Índice para optimizar búsquedas por pacienteId
     indices = [Index("pacienteId")]
 )
 data class Diagnostico(
+    // Identificador único generado automáticamente
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    // Referencia al paciente con este diagnóstico
     val pacienteId: Int,
+    // Descripción o código del diagnóstico clínico
     val descripcion: String,
-    val estado: String // "Activo", "Estable", "Resuelto"
+    // Estado actual: "Activo", "Estable" o "Resuelto"
+    val estado: String
 )

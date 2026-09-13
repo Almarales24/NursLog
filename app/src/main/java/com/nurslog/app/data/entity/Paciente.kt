@@ -3,16 +3,18 @@ package com.nurslog.app.data.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-/**
- * Entidad base del sistema. Todas las demás entidades (Medicamento, Diagnostico,
- * Alergia, NotaEnfermeria, etc.) se relacionan con Paciente mediante pacienteId.
- */
+// Define la tabla "paciente" en la base de datos
 @Entity(tableName = "paciente")
 data class Paciente(
+    // Identificador único generado automáticamente
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    // Nombre completo del paciente
     val nombre: String,
+    // Número de cama donde está ubicado
     val cama: String,
+    // Sala o unidad del hospital
     val sala: String,
+    // Edad del paciente en años
     val edad: Int
 )
