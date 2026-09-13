@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.nurslog.app.ui.components.MedicamentoItem
+import com.nurslog.app.ui.components.SwipeToDeleteItem
 
 @Composable
 fun MedicacionScreen(
@@ -39,15 +40,23 @@ fun MedicacionScreen(
                 text = "Medicación",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            Text(
+                text = "Desliza a la izquierda para eliminar un horario",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(items, key = { it.horarioId }) { item ->
-                    MedicamentoItem(
-                        item = item,
-                        onClick = { itemSeleccionado = it }
-                    )
+                    SwipeToDeleteItem(onDelete = { viewModel.eliminarHorario(item) }) {
+                        MedicamentoItem(
+                            item = item,
+                            onClick = { itemSeleccionado = it }
+                        )
+                    }
                 }
             }
         }

@@ -1,12 +1,13 @@
 package com.nurslog.app.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -19,10 +20,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import com.nurslog.app.data.entity.Paciente
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PacienteCard(
     paciente: Paciente,
     onClick: (Paciente) -> Unit,
+    onLongClick: (Paciente) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -36,9 +39,12 @@ fun PacienteCard(
         modifier = modifier
             .fillMaxWidth()
             .graphicsLayer { scaleX = scale; scaleY = scale }
-            .clickable(interactionSource = interactionSource, indication = null) {
-                onClick(paciente)
-            },
+            .combinedClickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = { onClick(paciente) },
+                onLongClick = { onLongClick(paciente) }
+            ),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         )

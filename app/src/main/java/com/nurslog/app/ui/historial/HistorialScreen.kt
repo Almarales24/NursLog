@@ -52,8 +52,16 @@ fun HistorialScreen(
 
         when (tabSeleccionada) {
             0 -> DiagnosticoTab(diagnosticos = diagnosticos, viewModel = viewModel)
-            1 -> AlergiaTab(alergias = alergias, onAgregarAlergia = viewModel::agregarAlergia)
-            2 -> NotaTab(notas = notas, onAgregarNota = viewModel::agregarNota)
+            1 -> AlergiaTab(
+                alergias = alergias,
+                onAgregarAlergia = viewModel::agregarAlergia,
+                onEliminarAlergia = viewModel::eliminarAlergia
+            )
+            2 -> NotaTab(
+                notas = notas,
+                onAgregarNota = viewModel::agregarNota,
+                onEliminarNota = viewModel::eliminarNota
+            )
         }
 
         Button(

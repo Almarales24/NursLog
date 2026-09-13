@@ -42,7 +42,7 @@ class MedicacionViewModel(
                                 it.horarioId == horario.id && it.estado == "Administrado"
                             }
                             MedicacionUiItem(
-                                horarioId = horario.id,
+                                horario = horario,
                                 medicamentoNombre = medicamento?.nombre ?: "Desconocido",
                                 dosis = medicamento?.dosis ?: "",
                                 via = medicamento?.via ?: "",
@@ -101,6 +101,12 @@ class MedicacionViewModel(
     fun confirmarAdministracion(horarioId: Int, enfermero: String, nota: String?) {
         viewModelScope.launch {
             repository.registrarAdministracion(horarioId, enfermero, nota)
+        }
+    }
+
+    fun eliminarHorario(item: MedicacionUiItem) {
+        viewModelScope.launch {
+            repository.deleteHorario(item.horario)
         }
     }
 }

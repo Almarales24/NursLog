@@ -14,23 +14,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.nurslog.app.data.entity.Paciente
 
 @Composable
 fun AgregarPacienteDialog(
+    pacienteExistente: Paciente? = null,
     onConfirm: (nombre: String, cama: String, sala: String, edad: Int) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var nombre by remember { mutableStateOf("") }
-    var cama by remember { mutableStateOf("") }
-    var sala by remember { mutableStateOf("") }
-    var edadTexto by remember { mutableStateOf("") }
+    var nombre by remember { mutableStateOf(pacienteExistente?.nombre ?: "") }
+    var cama by remember { mutableStateOf(pacienteExistente?.cama ?: "") }
+    var sala by remember { mutableStateOf(pacienteExistente?.sala ?: "") }
+    var edadTexto by remember { mutableStateOf(pacienteExistente?.edad?.toString() ?: "") }
 
     val edad = edadTexto.toIntOrNull()
     val esValido = nombre.isNotBlank() && cama.isNotBlank() && sala.isNotBlank() && edad != null
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Nuevo paciente") },
+        title = { Text(if (pacienteExistente == null) "Nuevo paciente" else "Editar paciente") },
         text = {
             Column {
                 OutlinedTextField(

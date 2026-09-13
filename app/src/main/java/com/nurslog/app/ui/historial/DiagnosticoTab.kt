@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.nurslog.app.data.entity.Diagnostico
 import com.nurslog.app.ui.components.EstadoBadge
+import com.nurslog.app.ui.components.SwipeToDeleteItem
 
 @Composable
 fun DiagnosticoTab(
@@ -31,7 +32,7 @@ fun DiagnosticoTab(
     Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         // HU-03: objetivo del dato visible para el usuario - Laura Chaparro
         Text(
-            text = "Diagnósticos registrados del paciente. Se usan para evitar administraciones o procedimientos contraindicados.",
+            text = "Diagnósticos registrados del paciente. Se usan para evitar administraciones o procedimientos contraindicados. Desliza a la izquierda para eliminar.",
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.padding(bottom = 12.dp)
@@ -46,17 +47,19 @@ fun DiagnosticoTab(
 
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(diagnosticos, key = { it.id }) { diagnostico ->
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(12.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = diagnostico.descripcion,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        EstadoBadge(texto = diagnostico.estado)
+                SwipeToDeleteItem(onDelete = { viewModel.eliminarDiagnostico(diagnostico) }) {
+                    Card(modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = diagnostico.descripcion,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            EstadoBadge(texto = diagnostico.estado)
+                        }
                     }
                 }
             }

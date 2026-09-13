@@ -31,6 +31,9 @@ class MedicacionRepository(
     suspend fun insertHorario(horario: Horario): Long =
         horarioDao.insert(horario)
 
+    suspend fun deleteHorario(horario: Horario) =
+        horarioDao.delete(horario)
+
     // Crea el medicamento y su horario en un solo paso desde el formulario
     suspend fun crearMedicamentoConHorario(
         nombre: String,

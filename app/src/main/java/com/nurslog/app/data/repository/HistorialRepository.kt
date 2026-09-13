@@ -27,11 +27,20 @@ class HistorialRepository(
     suspend fun insertDiagnostico(diagnostico: Diagnostico) =
         diagnosticoDao.insert(diagnostico)
 
+    suspend fun deleteDiagnostico(diagnostico: Diagnostico) =
+        diagnosticoDao.delete(diagnostico)
+
     suspend fun insertAlergia(alergia: Alergia) =
         alergiaDao.insert(alergia)
 
+    suspend fun deleteAlergia(alergia: Alergia) =
+        alergiaDao.delete(alergia)
+
     suspend fun insertNota(nota: NotaEnfermeria) =
         notaEnfermeriaDao.insert(nota)
+
+    suspend fun deleteNota(nota: NotaEnfermeria) =
+        notaEnfermeriaDao.delete(nota)
 
     // HU-08: acceso a clasificación ICD-10 para estandarizar diagnósticos - Karol
     @Suppress("UNCHECKED_CAST")

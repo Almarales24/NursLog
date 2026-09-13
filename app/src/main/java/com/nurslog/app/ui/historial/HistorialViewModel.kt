@@ -51,12 +51,20 @@ class HistorialViewModel(
         }
     }
 
+    fun eliminarDiagnostico(diagnostico: Diagnostico) {
+        viewModelScope.launch { repository.deleteDiagnostico(diagnostico) }
+    }
+
     fun agregarAlergia(sustancia: String, severidad: String) {
         viewModelScope.launch {
             repository.insertAlergia(
                 Alergia(pacienteId = pacienteId, sustancia = sustancia, severidad = severidad)
             )
         }
+    }
+
+    fun eliminarAlergia(alergia: Alergia) {
+        viewModelScope.launch { repository.deleteAlergia(alergia) }
     }
 
     // HU-01: nota con trazabilidad (autor + fechaHora automática) - Paula Mendoza
@@ -67,6 +75,10 @@ class HistorialViewModel(
                 NotaEnfermeria(pacienteId = pacienteId, texto = texto, autor = autor, tipo = tipo)
             )
         }
+    }
+
+    fun eliminarNota(nota: NotaEnfermeria) {
+        viewModelScope.launch { repository.deleteNota(nota) }
     }
 }
 

@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.nurslog.app.data.entity.NotaEnfermeria
 import com.nurslog.app.ui.components.EstadoBadge
+import com.nurslog.app.ui.components.SwipeToDeleteItem
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -31,7 +32,8 @@ private val TIPOS = listOf("Nota", "Recomendacion")
 @Composable
 fun NotaTab(
     notas: List<NotaEnfermeria>,
-    onAgregarNota: (texto: String, autor: String, tipo: String) -> Unit
+    onAgregarNota: (texto: String, autor: String, tipo: String) -> Unit,
+    onEliminarNota: (NotaEnfermeria) -> Unit
 ) {
     var texto by remember { mutableStateOf("") }
     var autor by remember { mutableStateOf("") }
@@ -41,7 +43,7 @@ fun NotaTab(
     Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         // HU-03: objetivo del dato visible para el usuario - Laura Chaparro
         Text(
-            text = "Registra observaciones o recomendaciones del personal de salud. Queda firmado con tu nombre y la hora automáticamente.",
+            text = "Registra observaciones o recomendaciones del personal de salud. Queda firmado con tu nombre y la hora automáticamente. Desliza a la izquierda para eliminar.",
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.padding(bottom = 12.dp)
@@ -92,34 +94,36 @@ fun NotaTab(
 
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(notas, key = { it.id }) { nota ->
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = nota.texto,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.padding(end = 8.dp)
-                            )
-                            EstadoBadge(texto = if (nota.tipo == "Recomendacion") "Recomendación" else "Nota")
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = "— ${nota.autor}",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.secondary
-                            )
-                            Text(
-                                text = formato.format(Date(nota.fechaHora)),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.secondary
-                            )
+                SwipeToDeleteItem(onDelete = { onEliminarNota(nota) }) {
+                    Card(modifier = Modifier.fillMaxWidth()) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = nota.texto,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+                                EstadoBadge(texto = if (nota.tipo == "Recomendacion") "Recomendación" else "Nota")
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "— ${nota.autor}",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                                Text(
+                                    text = formato.format(Date(nota.fechaHora)),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.secondary
+                                )
+                            }
                         }
                     }
                 }

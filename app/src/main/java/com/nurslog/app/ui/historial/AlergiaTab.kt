@@ -20,18 +20,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.nurslog.app.data.entity.Alergia
 import com.nurslog.app.ui.components.EstadoBadge
+import com.nurslog.app.ui.components.SwipeToDeleteItem
 
 @Composable
 fun AlergiaTab(
     alergias: List<Alergia>,
-    onAgregarAlergia: (sustancia: String, severidad: String) -> Unit
+    onAgregarAlergia: (sustancia: String, severidad: String) -> Unit,
+    onEliminarAlergia: (Alergia) -> Unit
 ) {
     var mostrarDialogo by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         // HU-03: objetivo del dato visible para el usuario - Laura Chaparro
         Text(
-            text = "Alergias conocidas del paciente. Revisa esta lista antes de administrar cualquier medicamento.",
+            text = "Alergias conocidas del paciente. Revisa esta lista antes de administrar cualquier medicamento. Desliza a la izquierda para eliminar.",
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.padding(bottom = 12.dp)
@@ -46,17 +48,19 @@ fun AlergiaTab(
 
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(alergias, key = { it.id }) { alergia ->
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(12.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = alergia.sustancia,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        EstadoBadge(texto = alergia.severidad)
+                SwipeToDeleteItem(onDelete = { onEliminarAlergia(alergia) }) {
+                    Card(modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = alergia.sustancia,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            EstadoBadge(texto = alergia.severidad)
+                        }
                     }
                 }
             }
