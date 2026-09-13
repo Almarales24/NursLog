@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Configuración de icono adaptativo para Android 8+ -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fondo: color oscuro -->
+    <background android:drawable="@color/ic_launcher_bg" />
+    <!-- Primer plano: el icono -->
+    <foreground android:drawable="@drawable/ic_app_icon" />
+</adaptive-icon>

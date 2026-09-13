@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icono de la aplicación NursLog: portapapeles con cruz médica -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="192dp"
+    android:height="192dp"
+    android:viewportWidth="192"
+    android:viewportHeight="192">
+
+    <!-- Portapapeles principal redondeado (cuerpo blanco: #F7F5F1) -->
+    <path
+        android:fillColor="#F7F5F1"
+        android:pathData="M48,42 L144,42 C151.7,42 158,48.3 158,56 L158,154 C158,161.7 151.7,168 144,168 L48,168 C40.3,168 34,161.7 34,154 L34,56 C34,48.3 40.3,42 48,42 Z" />
+
+    <!-- Clip del portapapeles superior (naranja oscuro: #A8502E) -->
+    <path
+        android:fillColor="#A8502E"
+        android:pathData="M72,34 L120,34 C124.4,34 128,37.6 128,42 C128,42 128,44 128,46 L64,46 C64,44 64,42 64,42 C64,37.6 67.6,34 72,34 Z" />
+
+    <!-- Borde oscuro del clip (gris oscuro: #3A3A38) -->
+    <path
+        android:fillColor="#3A3A38"
+        android:pathData="M68,42 L124,42 C127.3,42 130,44.7 130,48 L130,50 L62,50 L62,48 C62,44.7 64.7,42 68,42 Z" />
+
+    <!-- Cruz médica horizontal (naranja/rojo: #A8502E) -->
+    <path
+        android:fillColor="#A8502E"
+        android:pathData="M76,102 L116,102 L116,114 L76,114 Z" />
+
+    <!-- Cruz médica vertical (naranja/rojo: #A8502E) -->
+    <path
+        android:fillColor="#A8502E"
+        android:pathData="M90,88 L102,88 L102,128 L90,128 Z" />
+</vector>
