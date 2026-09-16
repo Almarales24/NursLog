@@ -11,6 +11,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,13 +21,17 @@ import androidx.compose.ui.unit.dp
 
 private val SEVERIDADES = listOf("Leve", "Moderada", "Severa")
 
+// Causa, síntomas y recomendación de manejo de la alergia, vía MedlinePlus (NIH)
 @Composable
 fun AlergiaDialog(
-    onConfirm: (sustancia: String, severidad: String) -> Unit,
+    viewModel: HistorialViewModel,
+    onConfirm: (sustancia: String, severidad: String, informacion: String?) -> Unit,
     onDismiss: () -> Unit
 ) {
     var sustancia by remember { mutableStateOf("") }
     var severidad by remember { mutableStateOf(SEVERIDADES[0]) }
+    var informacion by remember { mutableStateOf("") }
+    val informacionSugerida by viewModel.infoAlergiaBuscada.collectAsState()
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -55,18 +60,51 @@ fun AlergiaDialog(
                         )
                     }
                 }
+
+                TextButton(
+                    onClick = { viewModel.buscarInfoAlergia(sustancia) },
+                    enabled = sustancia.isNotBlank(),
+                    modifier = Modifier.padding(top = 8.dp)
+                ) {
+                    Text("Buscar causa y recomendación (MedlinePlus)")
+                }
+
+                if (informacionSugerida != null && informacion.isBlank()) {
+                    Text(
+                        text = "Sugerido: $informacionSugerida",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    TextButton(onClick = { informacion = informacionSugerida ?: "" }) {
+                        Text("Usar esta información")
+                    }
+                }
+
+                OutlinedTextField(
+                    value = informacion,
+                    onValueChange = { informacion = it },
+                    label = { Text("Causa, síntomas y recomendación (opcional)") },
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                )
             }
         },
         confirmButton = {
             TextButton(
-                onClick = { if (sustancia.isNotBlank()) onConfirm(sustancia, severidad) },
+                onClick = {
+                    onConfirm(sustancia, severidad, informacion.ifBlank { null })
+                    viewModel.limpiarInfoAlergiaBuscada()
+                },
                 enabled = sustancia.isNotBlank()
             ) {
                 Text("Guardar")
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = {
+                viewModel.limpiarInfoAlergiaBuscada()
+                onDismiss()
+            }) {
                 Text("Cancelar")
             }
         }

@@ -25,8 +25,7 @@ import com.nurslog.app.ui.components.SwipeToDeleteItem
 @Composable
 fun AlergiaTab(
     alergias: List<Alergia>,
-    onAgregarAlergia: (sustancia: String, severidad: String) -> Unit,
-    onEliminarAlergia: (Alergia) -> Unit
+    viewModel: HistorialViewModel
 ) {
     var mostrarDialogo by remember { mutableStateOf(false) }
 
@@ -48,18 +47,28 @@ fun AlergiaTab(
 
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(alergias, key = { it.id }) { alergia ->
-                SwipeToDeleteItem(onDelete = { onEliminarAlergia(alergia) }) {
+                SwipeToDeleteItem(onDelete = { viewModel.eliminarAlergia(alergia) }) {
                     Card(modifier = Modifier.fillMaxWidth()) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(12.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = alergia.sustancia,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            EstadoBadge(texto = alergia.severidad)
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = alergia.sustancia,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                EstadoBadge(texto = alergia.severidad)
+                            }
+                            alergia.informacion?.let { info ->
+                                Text(
+                                    text = info,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    modifier = Modifier.padding(top = 6.dp)
+                                )
+                            }
                         }
                     }
                 }
@@ -69,8 +78,9 @@ fun AlergiaTab(
 
     if (mostrarDialogo) {
         AlergiaDialog(
-            onConfirm = { sustancia, severidad ->
-                onAgregarAlergia(sustancia, severidad)
+            viewModel = viewModel,
+            onConfirm = { sustancia, severidad, informacion ->
+                viewModel.agregarAlergia(sustancia, severidad, informacion)
                 mostrarDialogo = false
             },
             onDismiss = { mostrarDialogo = false }
