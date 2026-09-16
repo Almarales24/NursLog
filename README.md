@@ -62,6 +62,7 @@ No se usa una capa `domain` independiente: la lógica de coordinación reside en
 | [RxNorm](https://lhncbc.nlm.nih.gov/RxNav/APIs/index.html) | Sugiere nombres normalizados de medicamentos al crear registros. |
 | [OpenFDA](https://open.fda.gov/apis/) | Consulta recomendaciones de dosificación y advertencias de medicamentos. |
 | [ICD-10 Clinical Tables](https://clinicaltables.nlm.nih.gov/) | Autocompleta códigos y descripciones diagnósticas. |
+| [MedlinePlus](https://www.medlineplus.gov/about/developers/geneticsdatafilesapi/) | Que da información de salud en texto (causas sencillas, síntomas, manejo general) |
 | [MyMemory Translation](https://mymemory.translated.net/doc/spec.php) | Traduce al español resultados clínicos obtenidos en inglés. |
 
 ## Instalación y configuración
