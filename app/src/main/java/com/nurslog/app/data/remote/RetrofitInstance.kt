@@ -9,6 +9,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
+/**
+ * Singleton encargado de proveer las instancias de los servicios API mediante Retrofit.
+ * Centraliza las URLs base y la configuración de los conversores para cada servicio.
+ */
 object RetrofitInstance {
 
     private const val ICD10_BASE_URL = "https://clinicaltables.nlm.nih.gov/"
@@ -17,6 +21,7 @@ object RetrofitInstance {
     private const val RXNORM_BASE_URL = "https://rxnav.nlm.nih.gov/"
     private const val MEDLINEPLUS_BASE_URL = "https://wsearch.nlm.nih.gov/"
 
+    /** API para búsqueda de códigos de diagnóstico ICD-10. */
     val icd10Api: Icd10Api by lazy {
         Retrofit.Builder()
             .baseUrl(ICD10_BASE_URL)
@@ -25,6 +30,7 @@ object RetrofitInstance {
             .create(Icd10Api::class.java)
     }
 
+    /** API de OpenFDA para obtener información detallada de medicamentos. */
     val openFdaApi: OpenFdaApi by lazy {
         Retrofit.Builder()
             .baseUrl(OPENFDA_BASE_URL)
@@ -33,6 +39,7 @@ object RetrofitInstance {
             .create(OpenFdaApi::class.java)
     }
 
+    /** API MyMemory para traducción de textos. */
     val translateApi: TranslateApi by lazy {
         Retrofit.Builder()
             .baseUrl(TRANSLATE_BASE_URL)
@@ -41,6 +48,7 @@ object RetrofitInstance {
             .create(TranslateApi::class.java)
     }
 
+    /** API RxNorm para normalización y búsqueda de nombres de fármacos. */
     val rxNormApi: RxNormApi by lazy {
         Retrofit.Builder()
             .baseUrl(RXNORM_BASE_URL)
@@ -49,6 +57,7 @@ object RetrofitInstance {
             .create(RxNormApi::class.java)
     }
 
+    /** API de MedlinePlus para obtener información de salud y temas médicos. */
     val medlinePlusApi: MedlinePlusApi by lazy {
         Retrofit.Builder()
             .baseUrl(MEDLINEPLUS_BASE_URL)

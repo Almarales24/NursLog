@@ -22,6 +22,13 @@ import com.nurslog.app.data.entity.Alergia
 import com.nurslog.app.ui.components.EstadoBadge
 import com.nurslog.app.ui.components.SwipeToDeleteItem
 
+/**
+ * Pestaña de visualización y gestión de alergias dentro del Historial Clínico.
+ * Muestra una lista de alergias y permite agregar nuevas o eliminar las existentes.
+ *
+ * @param alergias Lista de alergias del paciente.
+ * @param viewModel ViewModel encargado de la lógica del historial.
+ */
 @Composable
 fun AlergiaTab(
     alergias: List<Alergia>,

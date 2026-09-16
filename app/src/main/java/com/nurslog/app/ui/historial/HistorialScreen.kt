@@ -18,7 +18,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-// HU-09: mismo patrón de navegación por tabs ya validado - Juan Felipe Giraldo
+/**
+ * Pantalla principal del Historial Clínico.
+ * Organiza los diagnósticos, alergias y notas en una navegación por pestañas (tabs).
+ * HU-09: mismo patrón de navegación por tabs ya validado - Juan Felipe Giraldo
+ *
+ * @param viewModel ViewModel que provee los estados y lógica del historial.
+ * @param onIrAMedicacion Navegación hacia la pantalla de medicación.
+ * @param modifier Modificador de diseño.
+ */
 @Composable
 fun HistorialScreen(
     viewModel: HistorialViewModel,

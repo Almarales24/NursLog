@@ -21,7 +21,14 @@ import androidx.compose.ui.unit.dp
 
 private val SEVERIDADES = listOf("Leve", "Moderada", "Severa")
 
-// Causa, síntomas y recomendación de manejo de la alergia, vía MedlinePlus (NIH)
+/**
+ * Diálogo interactivo para registrar una nueva alergia.
+ * Incluye la funcionalidad de búsqueda automática de información médica vía MedlinePlus.
+ *
+ * @param viewModel ViewModel para gestionar la búsqueda de información.
+ * @param onConfirm Callback invocado al guardar la alergia.
+ * @param onDismiss Callback invocado al cancelar el diálogo.
+ */
 @Composable
 fun AlergiaDialog(
     viewModel: HistorialViewModel,
